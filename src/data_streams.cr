@@ -1,5 +1,4 @@
 require "json"
-require "./ext/json/serializable"
 require "./ext/json/to_json"
 
 require "./client"
