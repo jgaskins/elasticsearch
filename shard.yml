@@ -1,0 +1,15 @@
+name: elasticsearch
+version: 0.1.0
+
+authors:
+  - Jamie Gaskins <jgaskins@hey.com>
+
+dependencies:
+  db: { github: crystal-lang/crystal-db }
+
+development_dependencies:
+  faker: { github: askn/faker }
+
+crystal: 1.3.2
+
+license: MIT
