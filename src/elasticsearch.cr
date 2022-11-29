@@ -51,7 +51,7 @@ module Elasticsearch
       struct Bucket
         include JSON::Serializable
 
-        getter key_as_string : String
+        getter key_as_string : String?
         getter key : JSON::Any
         getter doc_count : Int64
 

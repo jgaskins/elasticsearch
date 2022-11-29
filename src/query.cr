@@ -45,23 +45,27 @@ module Elasticsearch
   end
 
   def self.aggregation(min : Query::Aggregations::Min)
-    Query::Aggregations::Aggregation.new(min: min)
+    Query::Aggregations::BasicAggregation.new(min: min)
   end
 
   def self.aggregation(avg : Query::Aggregations::Avg)
-    Query::Aggregations::Aggregation.new(avg: avg)
+    Query::Aggregations::BasicAggregation.new(avg: avg)
   end
 
   def self.aggregation(max : Query::Aggregations::Max)
-    Query::Aggregations::Aggregation.new(max: max)
+    Query::Aggregations::BasicAggregation.new(max: max)
   end
 
   def self.aggregation(percentiles : Query::Aggregations::Percentiles)
-    Query::Aggregations::Aggregation.new(percentiles: percentiles)
+    Query::Aggregations::BasicAggregation.new(percentiles: percentiles)
+  end
+
+  def self.aggregation(terms : NamedTuple, size : Int32? = nil)
+    Query::Aggregations::TermsAggregation.new(terms: terms, size: size)
   end
 
   def self.aggregation(date_histogram : Query::Aggregations::DateHistogram, aggregations : Query::Aggregations)
-    Query::Aggregations::Aggregation.new(
+    Query::Aggregations::BasicAggregation.new(
       date_histogram: date_histogram,
       aggregations: aggregations,
     )
@@ -242,8 +246,14 @@ module Elasticsearch
         aggregations.to_json json
       end
 
-      struct Aggregation
-        include JSON::Serializable
+      module Aggregation
+        macro included
+          include JSON::Serializable
+        end
+      end
+
+      struct BasicAggregation
+        include Aggregation
 
         getter min : Min?
         getter avg : Avg?
@@ -260,6 +270,16 @@ module Elasticsearch
           @date_histogram = nil,
           @aggregations = nil
         )
+        end
+      end
+
+      struct TermsAggregation(Terms)
+        include Aggregation
+
+        getter terms : Terms
+        getter size : Int32?
+
+        def initialize(@terms, @size)
         end
       end
 

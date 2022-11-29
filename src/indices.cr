@@ -1,6 +1,7 @@
 require "json"
 
 require "./client"
+require "./mappings"
 
 module Elasticsearch
   module Indices
