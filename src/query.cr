@@ -1,3 +1,5 @@
+require "json"
+
 module Elasticsearch
   def self.query(*, bool)
     Query::Query.new(
@@ -18,18 +20,32 @@ module Elasticsearch
     Query::Range.new(field, **kwargs)
   end
 
-  def self.filter(*filters)
+  def self.filter(*filters : Query::Filterable)
+    must filters
+  end
+
+  def self.must(*filters : Query::Filterable)
+    must filters
+  end
+
+  def self.must(filters : Enumerable(Query::Filterable))
     Query::Filter.new(filters.map(&.as(Query::Filterable)).to_a)
   end
 
-  def self.must(*filters)
-    Query::Filter.new(filters.map(&.as(Query::Filterable)).to_a)
+  def self.match(**matches : String)
+    matches.map do |key, value|
+      Query::Match.new(key.to_s, value)
+    end
   end
 
   def self.match_phrase(**kwargs)
     name = kwargs.keys.first
     value = kwargs.values.first
     Query::MatchPhrase.new(name.to_s, value)
+  end
+
+  def self.multi_terms(terms, size = nil)
+    Query::Aggregations::MultiTerms.new(terms, size)
   end
 
   def self.term(field, value)
@@ -62,6 +78,10 @@ module Elasticsearch
 
   def self.aggregation(terms : NamedTuple, size : Int32? = nil)
     Query::Aggregations::TermsAggregation.new(terms: terms, size: size)
+  end
+
+  def self.aggregation(multi_terms : Query::Aggregations::MultiTerms)
+    Query::Aggregations::MultiTermsAggregation.new(multi_terms)
   end
 
   def self.aggregation(date_histogram : Query::Aggregations::DateHistogram, aggregations : Query::Aggregations)
@@ -164,6 +184,7 @@ module Elasticsearch
 
       def initialize(
         @field,
+        *,
         @gte = nil,
         @gt = nil,
         @lt = nil,
@@ -210,6 +231,26 @@ module Elasticsearch
                   json.field "value", value if value
                 end
               end
+            end
+          end
+        end
+      end
+    end
+
+    struct Match
+      include Filterable
+
+      getter name : String
+      getter value : String
+
+      def initialize(@name, @value)
+      end
+
+      def to_json(json : JSON::Builder)
+        json.object do
+          json.field "match" do
+            json.object do
+              json.field name, value
             end
           end
         end
@@ -282,6 +323,25 @@ module Elasticsearch
         getter size : Int32?
 
         def initialize(@terms, @size)
+        end
+      end
+
+      struct MultiTerms(Terms)
+        include Aggregation
+
+        getter terms : Terms
+        getter size : Int32?
+
+        def initialize(@terms, @size = nil)
+        end
+      end
+
+      struct MultiTermsAggregation(Terms)
+        include Aggregation
+
+        getter multi_terms : MultiTerms(Terms)
+
+        def initialize(@multi_terms)
         end
       end
 
