@@ -125,8 +125,10 @@ module Elasticsearch
 
       getter must : Filter?
       getter filter : Filter?
+      getter should : Filter?
+      getter must_not : Filter?
 
-      def initialize(*, @must = nil, @filter = nil, should, must_not)
+      def initialize(*, @must = nil, @filter = nil, @should = nil, @must_not = nil)
       end
     end
 
