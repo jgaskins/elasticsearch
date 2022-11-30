@@ -163,17 +163,17 @@ class Elasticsearch::Client
     end
   end
 
-  struct SearchQuery(T)
+  struct SearchQuery(QueryType, AggregationType)
     include JSON::Serializable
 
     getter from : Int64 | Int32?
     getter size : Int64 | Int32?
-    getter query : T
-    getter aggregations : Query::Aggregations?
+    getter query : QueryType
+    getter aggregations : AggregationType?
     getter sort : Sort | Array(Sort) | Nil
 
     def initialize(
-      @query : T,
+      @query : QueryType,
       @from = nil,
       @size = nil,
       @aggregations = nil,
