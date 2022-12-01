@@ -1,3 +1,4 @@
+# :nodoc:
 struct NamedTuple
   def to_json(json : ::JSON::Builder)
     json.object { to_json_properties json }
@@ -12,6 +13,7 @@ struct NamedTuple
   end
 end
 
+# :nodoc:
 class Hash
   def to_json(json : ::JSON::Builder)
     json.object { to_json_properties json }
