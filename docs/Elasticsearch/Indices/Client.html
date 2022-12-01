@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 1.5.1">
+<meta name="crystal_docs.project_version" content="main">
+<meta name="crystal_docs.project_name" content="elasticsearch">
+
+
+
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../js/doc.js"></script>
+
+  <meta name="repository-name" content="elasticsearch">
+  <title>Elasticsearch::Indices::Client - elasticsearch main</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../../index.html">
+          elasticsearch
+        </a>
+      </h1>
+
+      <span class="project-version">
+        main
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="elasticsearch/Elasticsearch" data-name="elasticsearch">
+      <a href="../../Elasticsearch.html">Elasticsearch</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/BulkAction" data-name="elasticsearch::bulkaction(t)">
+      <a href="../../Elasticsearch/BulkAction.html">BulkAction</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/BulkActionType" data-name="elasticsearch::bulkactiontype">
+      <a href="../../Elasticsearch/BulkActionType.html">BulkActionType</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Client" data-name="elasticsearch::client">
+      <a href="../../Elasticsearch/Client.html">Client</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Client/QueryString" data-name="elasticsearch::client::querystring">
+      <a href="../../Elasticsearch/Client/QueryString.html">QueryString</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Client/SearchQuery" data-name="elasticsearch::client::searchquery(querytype, aggregationtype)">
+      <a href="../../Elasticsearch/Client/SearchQuery.html">SearchQuery</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Client/SimpleQueryStringOptions" data-name="elasticsearch::client::simplequerystringoptions">
+      <a href="../../Elasticsearch/Client/SimpleQueryStringOptions.html">SimpleQueryStringOptions</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Datapoint" data-name="elasticsearch::datapoint(t)">
+      <a href="../../Elasticsearch/Datapoint.html">Datapoint</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/DataStreams" data-name="elasticsearch::datastreams">
+      <a href="../../Elasticsearch/DataStreams.html">DataStreams</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/DataStreams/DataStream" data-name="elasticsearch::datastreams::datastream">
+      <a href="../../Elasticsearch/DataStreams/DataStream.html">DataStream</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/DataStreams/DataStreamCreated" data-name="elasticsearch::datastreams::datastreamcreated">
+      <a href="../../Elasticsearch/DataStreams/DataStreamCreated.html">DataStreamCreated</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/DataStreams/DataStreamsResponse" data-name="elasticsearch::datastreams::datastreamsresponse">
+      <a href="../../Elasticsearch/DataStreams/DataStreamsResponse.html">DataStreamsResponse</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/DataStreams/Field" data-name="elasticsearch::datastreams::field">
+      <a href="../../Elasticsearch/DataStreams/Field.html">Field</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/DataStreams/Index" data-name="elasticsearch::datastreams::index">
+      <a href="../../Elasticsearch/DataStreams/Index.html">Index</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/DataStreams/StatsResponse" data-name="elasticsearch::datastreams::statsresponse">
+      <a href="../../Elasticsearch/DataStreams/StatsResponse.html">StatsResponse</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/DataStreams/StatsResponse/DataStream" data-name="elasticsearch::datastreams::statsresponse::datastream">
+      <a href="../../Elasticsearch/DataStreams/StatsResponse/DataStream.html">DataStream</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/DataStreams/StatsResponse/DataStream/NanosecondsTimestamp" data-name="elasticsearch::datastreams::statsresponse::datastream::nanosecondstimestamp">
+      <a href="../../Elasticsearch/DataStreams/StatsResponse/DataStream/NanosecondsTimestamp.html">NanosecondsTimestamp</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/DataStreams/StatsResponse/Shards" data-name="elasticsearch::datastreams::statsresponse::shards">
+      <a href="../../Elasticsearch/DataStreams/StatsResponse/Shards.html">Shards</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/DataStreams/Status" data-name="elasticsearch::datastreams::status">
+      <a href="../../Elasticsearch/DataStreams/Status.html">Status</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/DataStreamTimestamp" data-name="elasticsearch::datastreamtimestamp">
+      <a href="../../Elasticsearch/DataStreamTimestamp.html">DataStreamTimestamp</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Documents" data-name="elasticsearch::documents">
+      <a href="../../Elasticsearch/Documents.html">Documents</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Documents/BulkResponse" data-name="elasticsearch::documents::bulkresponse">
+      <a href="../../Elasticsearch/Documents/BulkResponse.html">BulkResponse</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Documents/BulkResponse/Action" data-name="elasticsearch::documents::bulkresponse::action">
+      <a href="../../Elasticsearch/Documents/BulkResponse/Action.html">Action</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Documents/BulkResponse/Action/Type" data-name="elasticsearch::documents::bulkresponse::action::type">
+      <a href="../../Elasticsearch/Documents/BulkResponse/Action/Type.html">Type</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Documents/DocumentResult" data-name="elasticsearch::documents::documentresult(t)">
+      <a href="../../Elasticsearch/Documents/DocumentResult.html">DocumentResult</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Documents/Refresh" data-name="elasticsearch::documents::refresh">
+      <a href="../../Elasticsearch/Documents/Refresh.html">Refresh</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Dynamic" data-name="elasticsearch::dynamic">
+      <a href="../../Elasticsearch/Dynamic.html">Dynamic</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/DynamicProperty" data-name="elasticsearch::dynamicproperty">
+      <a href="../../Elasticsearch/DynamicProperty.html">DynamicProperty</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Exception" data-name="elasticsearch::exception">
+      <a href="../../Elasticsearch/Exception.html">Exception</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Field" data-name="elasticsearch::field">
+      <a href="../../Elasticsearch/Field.html">Field</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Fields" data-name="elasticsearch::fields">
+      <a href="../../Elasticsearch/Fields.html">Fields</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Fields/Keyword" data-name="elasticsearch::fields::keyword">
+      <a href="../../Elasticsearch/Fields/Keyword.html">Keyword</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Fields/Text" data-name="elasticsearch::fields::text">
+      <a href="../../Elasticsearch/Fields/Text.html">Text</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/ILM" data-name="elasticsearch::ilm">
+      <a href="../../Elasticsearch/ILM.html">ILM</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/ILM/Actions" data-name="elasticsearch::ilm::actions">
+      <a href="../../Elasticsearch/ILM/Actions.html">Actions</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/ILM/Actions/Action" data-name="elasticsearch::ilm::actions::action">
+      <a href="../../Elasticsearch/ILM/Actions/Action.html">Action</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/ILM/Actions/Delete" data-name="elasticsearch::ilm::actions::delete">
+      <a href="../../Elasticsearch/ILM/Actions/Delete.html">Delete</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/ILM/Actions/Delete/Options" data-name="elasticsearch::ilm::actions::delete::options">
+      <a href="../../Elasticsearch/ILM/Actions/Delete/Options.html">Options</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/ILM/Client" data-name="elasticsearch::ilm::client">
+      <a href="../../Elasticsearch/ILM/Client.html">Client</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/ILM/GetPolicyResponse" data-name="elasticsearch::ilm::getpolicyresponse">
+      <a href="../../Elasticsearch/ILM/GetPolicyResponse.html">GetPolicyResponse</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/ILM/GetPolicyResponse/PolicyConsumers" data-name="elasticsearch::ilm::getpolicyresponse::policyconsumers">
+      <a href="../../Elasticsearch/ILM/GetPolicyResponse/PolicyConsumers.html">PolicyConsumers</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/ILM/Phase" data-name="elasticsearch::ilm::phase">
+      <a href="../../Elasticsearch/ILM/Phase.html">Phase</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/ILM/Phases" data-name="elasticsearch::ilm::phases">
+      <a href="../../Elasticsearch/ILM/Phases.html">Phases</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/ILM/Policy" data-name="elasticsearch::ilm::policy(t)">
+      <a href="../../Elasticsearch/ILM/Policy.html">Policy</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/ILM/PutPolicyRequest" data-name="elasticsearch::ilm::putpolicyrequest(t)">
+      <a href="../../Elasticsearch/ILM/PutPolicyRequest.html">PutPolicyRequest</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/IndexTemplates" data-name="elasticsearch::indextemplates">
+      <a href="../../Elasticsearch/IndexTemplates.html">IndexTemplates</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/IndexTemplates/Client" data-name="elasticsearch::indextemplates::client">
+      <a href="../../Elasticsearch/IndexTemplates/Client.html">Client</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/IndexTemplates/GetResponse" data-name="elasticsearch::indextemplates::getresponse">
+      <a href="../../Elasticsearch/IndexTemplates/GetResponse.html">GetResponse</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/IndexTemplates/GetResponse/Entry" data-name="elasticsearch::indextemplates::getresponse::entry">
+      <a href="../../Elasticsearch/IndexTemplates/GetResponse/Entry.html">Entry</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/IndexTemplates/IndexTemplate" data-name="elasticsearch::indextemplates::indextemplate">
+      <a href="../../Elasticsearch/IndexTemplates/IndexTemplate.html">IndexTemplate</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/IndexTemplates/IndexTemplate/DataStream" data-name="elasticsearch::indextemplates::indextemplate::datastream">
+      <a href="../../Elasticsearch/IndexTemplates/IndexTemplate/DataStream.html">DataStream</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/IndexTemplates/IndexTemplate/Mapping" data-name="elasticsearch::indextemplates::indextemplate::mapping">
+      <a href="../../Elasticsearch/IndexTemplates/IndexTemplate/Mapping.html">Mapping</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/IndexTemplates/IndexTemplate/Mapping/Property" data-name="elasticsearch::indextemplates::indextemplate::mapping::property">
+      <a href="../../Elasticsearch/IndexTemplates/IndexTemplate/Mapping/Property.html">Property</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/IndexTemplates/IndexTemplate/Template" data-name="elasticsearch::indextemplates::indextemplate::template">
+      <a href="../../Elasticsearch/IndexTemplates/IndexTemplate/Template.html">Template</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent open current" data-id="elasticsearch/Elasticsearch/Indices" data-name="elasticsearch::indices">
+      <a href="../../Elasticsearch/Indices.html">Indices</a>
+      
+        <ul>
+  
+  <li class=" current" data-id="elasticsearch/Elasticsearch/Indices/Client" data-name="elasticsearch::indices::client">
+      <a href="../../Elasticsearch/Indices/Client.html">Client</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/GetResponse" data-name="elasticsearch::indices::getresponse">
+      <a href="../../Elasticsearch/Indices/GetResponse.html">GetResponse</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Index" data-name="elasticsearch::indices::index">
+      <a href="../../Elasticsearch/Indices/Index.html">Index</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Indices/Settings" data-name="elasticsearch::indices::settings">
+      <a href="../../Elasticsearch/Indices/Settings.html">Settings</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Indices/Settings/Analysis" data-name="elasticsearch::indices::settings::analysis">
+      <a href="../../Elasticsearch/Indices/Settings/Analysis.html">Analysis</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Analysis/AnalyzerMap" data-name="elasticsearch::indices::settings::analysis::analyzermap">
+      <a href="../../Elasticsearch/Indices/Settings/Analysis/AnalyzerMap.html">AnalyzerMap</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Indices/Settings/Analysis/Filter" data-name="elasticsearch::indices::settings::analysis::filter">
+      <a href="../../Elasticsearch/Indices/Settings/Analysis/Filter.html">Filter</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Analysis/Filter/Type" data-name="elasticsearch::indices::settings::analysis::filter::type">
+      <a href="../../Elasticsearch/Indices/Settings/Analysis/Filter/Type.html">Type</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Analysis/FilterMap" data-name="elasticsearch::indices::settings::analysis::filtermap">
+      <a href="../../Elasticsearch/Indices/Settings/Analysis/FilterMap.html">FilterMap</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Analysis/KeywordMarker" data-name="elasticsearch::indices::settings::analysis::keywordmarker">
+      <a href="../../Elasticsearch/Indices/Settings/Analysis/KeywordMarker.html">KeywordMarker</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Analysis/Stemmer" data-name="elasticsearch::indices::settings::analysis::stemmer">
+      <a href="../../Elasticsearch/Indices/Settings/Analysis/Stemmer.html">Stemmer</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Analysis/Stop" data-name="elasticsearch::indices::settings::analysis::stop">
+      <a href="../../Elasticsearch/Indices/Settings/Analysis/Stop.html">Stop</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Analyzer" data-name="elasticsearch::indices::settings::analyzer">
+      <a href="../../Elasticsearch/Indices/Settings/Analyzer.html">Analyzer</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Indices/Settings/Index" data-name="elasticsearch::indices::settings::index">
+      <a href="../../Elasticsearch/Indices/Settings/Index.html">Index</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Index/Hidden" data-name="elasticsearch::indices::settings::index::hidden">
+      <a href="../../Elasticsearch/Indices/Settings/Index/Hidden.html">Hidden</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Index/Lifecycle" data-name="elasticsearch::indices::settings::index::lifecycle">
+      <a href="../../Elasticsearch/Indices/Settings/Index/Lifecycle.html">Lifecycle</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Indices/Settings/Index/Routing" data-name="elasticsearch::indices::settings::index::routing">
+      <a href="../../Elasticsearch/Indices/Settings/Index/Routing.html">Routing</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Indices/Settings/Index/Routing/Allocation" data-name="elasticsearch::indices::settings::index::routing::allocation">
+      <a href="../../Elasticsearch/Indices/Settings/Index/Routing/Allocation.html">Allocation</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Indices/Settings/Index/Routing/Allocation/Include" data-name="elasticsearch::indices::settings::index::routing::allocation::include">
+      <a href="../../Elasticsearch/Indices/Settings/Index/Routing/Allocation/Include.html">Include</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Index/Routing/Allocation/Include/TierPreference" data-name="elasticsearch::indices::settings::index::routing::allocation::include::tierpreference">
+      <a href="../../Elasticsearch/Indices/Settings/Index/Routing/Allocation/Include/TierPreference.html">TierPreference</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Settings/Index/Version" data-name="elasticsearch::indices::settings::index::version">
+      <a href="../../Elasticsearch/Indices/Settings/Index/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Indices/Stats" data-name="elasticsearch::indices::stats">
+      <a href="../../Elasticsearch/Indices/Stats.html">Stats</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/AllIndices" data-name="elasticsearch::indices::stats::allindices">
+      <a href="../../Elasticsearch/Indices/Stats/AllIndices.html">AllIndices</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Docs" data-name="elasticsearch::indices::stats::docs">
+      <a href="../../Elasticsearch/Indices/Stats/Docs.html">Docs</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Get" data-name="elasticsearch::indices::stats::get">
+      <a href="../../Elasticsearch/Indices/Stats/Get.html">Get</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Index" data-name="elasticsearch::indices::stats::index">
+      <a href="../../Elasticsearch/Indices/Stats/Index.html">Index</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Indexing" data-name="elasticsearch::indices::stats::indexing">
+      <a href="../../Elasticsearch/Indices/Stats/Indexing.html">Indexing</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Merges" data-name="elasticsearch::indices::stats::merges">
+      <a href="../../Elasticsearch/Indices/Stats/Merges.html">Merges</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Primaries" data-name="elasticsearch::indices::stats::primaries">
+      <a href="../../Elasticsearch/Indices/Stats/Primaries.html">Primaries</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Refresh" data-name="elasticsearch::indices::stats::refresh">
+      <a href="../../Elasticsearch/Indices/Stats/Refresh.html">Refresh</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Search" data-name="elasticsearch::indices::stats::search">
+      <a href="../../Elasticsearch/Indices/Stats/Search.html">Search</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Shards" data-name="elasticsearch::indices::stats::shards">
+      <a href="../../Elasticsearch/Indices/Stats/Shards.html">Shards</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/ShardStats" data-name="elasticsearch::indices::stats::shardstats">
+      <a href="../../Elasticsearch/Indices/Stats/ShardStats.html">ShardStats</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Stats" data-name="elasticsearch::indices::stats::stats">
+      <a href="../../Elasticsearch/Indices/Stats/Stats.html">Stats</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Indices/Stats/Store" data-name="elasticsearch::indices::stats::store">
+      <a href="../../Elasticsearch/Indices/Stats/Store.html">Store</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Mapping" data-name="elasticsearch::mapping">
+      <a href="../../Elasticsearch/Mapping.html">Mapping</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Mappings" data-name="elasticsearch::mappings">
+      <a href="../../Elasticsearch/Mappings.html">Mappings</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Mappings/MappingResponse" data-name="elasticsearch::mappings::mappingresponse">
+      <a href="../../Elasticsearch/Mappings/MappingResponse.html">MappingResponse</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/MillisecondsTime" data-name="elasticsearch::millisecondstime">
+      <a href="../../Elasticsearch/MillisecondsTime.html">MillisecondsTime</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/MillisecondsTimeSpan" data-name="elasticsearch::millisecondstimespan">
+      <a href="../../Elasticsearch/MillisecondsTimeSpan.html">MillisecondsTimeSpan</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Namespace" data-name="elasticsearch::namespace">
+      <a href="../../Elasticsearch/Namespace.html">Namespace</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Properties" data-name="elasticsearch::properties">
+      <a href="../../Elasticsearch/Properties.html">Properties</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Property" data-name="elasticsearch::property">
+      <a href="../../Elasticsearch/Property.html">Property</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Query" data-name="elasticsearch::query">
+      <a href="../../Elasticsearch/Query.html">Query</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/Query/Aggregations" data-name="elasticsearch::query::aggregations">
+      <a href="../../Elasticsearch/Query/Aggregations.html">Aggregations</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Aggregations/Aggregation" data-name="elasticsearch::query::aggregations::aggregation">
+      <a href="../../Elasticsearch/Query/Aggregations/Aggregation.html">Aggregation</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Aggregations/Avg" data-name="elasticsearch::query::aggregations::avg">
+      <a href="../../Elasticsearch/Query/Aggregations/Avg.html">Avg</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Aggregations/BasicAggregation" data-name="elasticsearch::query::aggregations::basicaggregation">
+      <a href="../../Elasticsearch/Query/Aggregations/BasicAggregation.html">BasicAggregation</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Aggregations/DateHistogram" data-name="elasticsearch::query::aggregations::datehistogram">
+      <a href="../../Elasticsearch/Query/Aggregations/DateHistogram.html">DateHistogram</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Aggregations/Max" data-name="elasticsearch::query::aggregations::max">
+      <a href="../../Elasticsearch/Query/Aggregations/Max.html">Max</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Aggregations/Min" data-name="elasticsearch::query::aggregations::min">
+      <a href="../../Elasticsearch/Query/Aggregations/Min.html">Min</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Aggregations/MultiTerms" data-name="elasticsearch::query::aggregations::multiterms(terms)">
+      <a href="../../Elasticsearch/Query/Aggregations/MultiTerms.html">MultiTerms</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Aggregations/MultiTermsAggregation" data-name="elasticsearch::query::aggregations::multitermsaggregation(terms)">
+      <a href="../../Elasticsearch/Query/Aggregations/MultiTermsAggregation.html">MultiTermsAggregation</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Aggregations/Percentiles" data-name="elasticsearch::query::aggregations::percentiles">
+      <a href="../../Elasticsearch/Query/Aggregations/Percentiles.html">Percentiles</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Aggregations/TermsAggregation" data-name="elasticsearch::query::aggregations::termsaggregation(terms)">
+      <a href="../../Elasticsearch/Query/Aggregations/TermsAggregation.html">TermsAggregation</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Bool" data-name="elasticsearch::query::bool">
+      <a href="../../Elasticsearch/Query/Bool.html">Bool</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Filter" data-name="elasticsearch::query::filter">
+      <a href="../../Elasticsearch/Query/Filter.html">Filter</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Filterable" data-name="elasticsearch::query::filterable">
+      <a href="../../Elasticsearch/Query/Filterable.html">Filterable</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Match" data-name="elasticsearch::query::match">
+      <a href="../../Elasticsearch/Query/Match.html">Match</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/MatchPhrase" data-name="elasticsearch::query::matchphrase">
+      <a href="../../Elasticsearch/Query/MatchPhrase.html">MatchPhrase</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Query" data-name="elasticsearch::query::query">
+      <a href="../../Elasticsearch/Query/Query.html">Query</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Range" data-name="elasticsearch::query::range">
+      <a href="../../Elasticsearch/Query/Range.html">Range</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Query/Term" data-name="elasticsearch::query::term">
+      <a href="../../Elasticsearch/Query/Term.html">Term</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/RuntimePropertyMap" data-name="elasticsearch::runtimepropertymap">
+      <a href="../../Elasticsearch/RuntimePropertyMap.html">RuntimePropertyMap</a>
+      
+    </li>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/SearchResult" data-name="elasticsearch::searchresult(t)">
+      <a href="../../Elasticsearch/SearchResult.html">SearchResult</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="elasticsearch/Elasticsearch/SearchResult/AggregatedResult" data-name="elasticsearch::searchresult::aggregatedresult">
+      <a href="../../Elasticsearch/SearchResult/AggregatedResult.html">AggregatedResult</a>
+      
+        <ul>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/SearchResult/AggregatedResult/AggregatedValue" data-name="elasticsearch::searchresult::aggregatedresult::aggregatedvalue">
+      <a href="../../Elasticsearch/SearchResult/AggregatedResult/AggregatedValue.html">AggregatedValue</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/SearchResult/AggregatedResult/Bucket" data-name="elasticsearch::searchresult::aggregatedresult::bucket">
+      <a href="../../Elasticsearch/SearchResult/AggregatedResult/Bucket.html">Bucket</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/SearchResult/Hit" data-name="elasticsearch::searchresult::hit(t)">
+      <a href="../../Elasticsearch/SearchResult/Hit.html">Hit</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/SearchResult/Hits" data-name="elasticsearch::searchresult::hits(t)">
+      <a href="../../Elasticsearch/SearchResult/Hits.html">Hits</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/SearchResult/Shards" data-name="elasticsearch::searchresult::shards">
+      <a href="../../Elasticsearch/SearchResult/Shards.html">Shards</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/SearchResult/Totals" data-name="elasticsearch::searchresult::totals">
+      <a href="../../Elasticsearch/SearchResult/Totals.html">Totals</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Serializable" data-name="elasticsearch::serializable">
+      <a href="../../Elasticsearch/Serializable.html">Serializable</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Sort" data-name="elasticsearch::sort">
+      <a href="../../Elasticsearch/Sort.html">Sort</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/StringifiedInt" data-name="elasticsearch::stringifiedint">
+      <a href="../../Elasticsearch/StringifiedInt.html">StringifiedInt</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Elasticsearch/Type" data-name="elasticsearch::type">
+      <a href="../../Elasticsearch/Type.html">Type</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/ES" data-name="es">
+      <a href="../../ES.html">ES</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/Hash" data-name="hash(k, v)">
+      <a href="../../Hash.html">Hash</a>
+      
+    </li>
+  
+  <li class=" " data-id="elasticsearch/NamedTuple" data-name="namedtuple(**t)">
+      <a href="../../NamedTuple.html">NamedTuple</a>
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">struct</span> Elasticsearch::Indices::Client
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Elasticsearch/Indices/Client.html">Elasticsearch::Indices::Client</a></li><li class="superclass">Struct</li><li class="superclass">Value</li><li class="superclass">Object</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/jgaskins/elasticsearch/blob/main/src/indices.cr#L10" target="_blank">
+        indices.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new%28client%3AElasticsearch%3A%3AClient%29-class-method" class="signature"><strong>.new</strong>(client : Elasticsearch::Client)</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#create%28name%3AString%2Cmappings%3AMapping%2Csettings%3Dnil%29-instance-method" class="signature"><strong>#create</strong>(name : String, mappings : Mapping, settings = <span class="n">nil</span>)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#create%28name%3AString%29-instance-method" class="signature"><strong>#create</strong>(name : String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#delete%28name%3AString%29-instance-method" class="signature"><strong>#delete</strong>(name : String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#get%28names%3AEnumerable%28String%29%29-instance-method" class="signature"><strong>#get</strong>(names : Enumerable(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#get%28name%3AString%29-instance-method" class="signature"><strong>#get</strong>(name : String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#stats%28name%3AString%29-instance-method" class="signature"><strong>#stats</strong>(name : String)</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(client:Elasticsearch::Client)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(client : <a href="../../Elasticsearch/Client.html">Elasticsearch::Client</a>)
+
+        <a class="method-permalink" href="#new%28client%3AElasticsearch%3A%3AClient%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/jgaskins/elasticsearch/blob/main/src/indices.cr#L11" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="create(name:String,mappings:Mapping,settings=nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>create</strong>(name : String, mappings : <a href="../../Elasticsearch/Mapping.html">Mapping</a>, settings = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#create%28name%3AString%2Cmappings%3AMapping%2Csettings%3Dnil%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/jgaskins/elasticsearch/blob/main/src/indices.cr#L18" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="create(name:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>create</strong>(name : String)
+
+        <a class="method-permalink" href="#create%28name%3AString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/jgaskins/elasticsearch/blob/main/src/indices.cr#L14" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="delete(name:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>delete</strong>(name : String)
+
+        <a class="method-permalink" href="#delete%28name%3AString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/jgaskins/elasticsearch/blob/main/src/indices.cr#L49" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="get(names:Enumerable(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>get</strong>(names : Enumerable(String))
+
+        <a class="method-permalink" href="#get%28names%3AEnumerable%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/jgaskins/elasticsearch/blob/main/src/indices.cr#L35" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="get(name:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>get</strong>(name : String)
+
+        <a class="method-permalink" href="#get%28name%3AString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/jgaskins/elasticsearch/blob/main/src/indices.cr#L39" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="stats(name:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>stats</strong>(name : String)
+
+        <a class="method-permalink" href="#stats%28name%3AString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/jgaskins/elasticsearch/blob/main/src/indices.cr#L53" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>
