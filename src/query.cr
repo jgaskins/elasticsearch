@@ -84,7 +84,7 @@ module Elasticsearch
     Query::Aggregations::MultiTermsAggregation.new(multi_terms)
   end
 
-  def self.aggregation(date_histogram : Query::Aggregations::DateHistogram, aggregations : Query::Aggregations)
+  def self.aggregation(date_histogram : Query::Aggregations::DateHistogram, aggregations : Query::Aggregations? = nil)
     Query::Aggregations::BasicAggregation.new(
       date_histogram: date_histogram,
       aggregations: aggregations,
