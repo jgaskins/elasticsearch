@@ -33,9 +33,7 @@ module Elasticsearch
   end
 
   def self.match(**matches : String)
-    matches.map do |key, value|
-      Query::Match.new(key.to_s, value)
-    end
+    Query::Match.new(matches.keys.first.to_s, matches.values.first.to_s)
   end
 
   def self.match_phrase(**kwargs)
@@ -50,6 +48,10 @@ module Elasticsearch
 
   def self.term(field, value)
     Query::Term.new(field, value)
+  end
+
+  def self.field(field : String)
+    Query::Field.new(field)
   end
 
   def self.aggregations(**kwargs : Query::Aggregations::Aggregation)
@@ -237,6 +239,15 @@ module Elasticsearch
       end
     end
 
+    struct Field
+      include JSON::Serializable
+
+      getter field : String
+
+      def initialize(@field)
+      end
+    end
+
     struct Match
       include Filterable
 
@@ -360,7 +371,7 @@ module Elasticsearch
       record(Min, field : String) { include JSON::Serializable }
       record(Max, field : String) { include JSON::Serializable }
       record(Avg, field : String) { include JSON::Serializable }
-      record(Percentiles, field : String, percents : Array(Int64 | Float64)) { include JSON::Serializable }
+      record(Percentiles, field : String, percents : Array(Int64 | Float64) | Array(Int64) | Array(Float64)) { include JSON::Serializable }
     end
   end
 end

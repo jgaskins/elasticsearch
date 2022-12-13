@@ -15,7 +15,7 @@ module Elasticsearch
     register_mapping String, ES::Property.new(:text)
     register_mapping Int32, ES::Property.new(:long)
     register_mapping Int64, ES::Property.new(:long)
-    register_mapping Time, ES::Property.new(:date_nanos)
+    register_mapping Time, ES::Property.new(:date)
     register_mapping Float32, ES::Property.new(:float)
     register_mapping Float64, ES::Property.new(:double)
     register_mapping Bool, ES::Property.new(:boolean)

@@ -2,6 +2,7 @@ require "json"
 
 require "./client"
 require "./mappings"
+require "./size"
 
 module Elasticsearch
   module Indices
@@ -74,6 +75,7 @@ module Elasticsearch
       # getter aliases : Hash(String, String)?
       getter mappings : Mapping
       getter settings : Settings
+      getter data_stream : String?
     end
 
     struct Settings
@@ -262,6 +264,7 @@ module Elasticsearch
 
       module Stats
         getter primaries : Primaries
+        getter total : Primaries
       end
 
       struct AllIndices
@@ -326,9 +329,9 @@ module Elasticsearch
       struct Store
         include JSON::Serializable
 
-        getter size_in_bytes : Int64 = 0i64
-        getter total_data_set_size_in_bytes : Int64 = 0i64
-        getter reserved_in_bytes : Int64 = 0i64
+        getter size_in_bytes : Size = Size.new(0)
+        getter total_data_set_size_in_bytes : Size = Size.new(0i64)
+        getter reserved_in_bytes : Size = Size.new(0i64)
 
         def initialize
         end
@@ -401,14 +404,14 @@ module Elasticsearch
 
         getter current : Int64 = 0i64
         getter current_docs : Int64 = 0i64
-        getter current_size_in_bytes : Int64 = 0i64
+        getter current_size_in_bytes : Size = Size.new(0i64)
         getter total : Int64 = 0i64
         Macros.stat_getter "total", total: false, time: true
         getter total_docs : Int64 = 0i64
-        getter total_size_in_bytes : Int64 = 0i64
+        getter total_size_in_bytes : Size = Size.new(0i64)
         Macros.stat_getter "total_stopped", total: false, time: true
         Macros.stat_getter "total_throttled", total: false, time: true
-        getter total_auto_throttle_in_bytes : Int64 = 0i64
+        getter total_auto_throttle_in_bytes : Size = Size.new(0)
 
         def initialize
         end
@@ -430,11 +433,6 @@ module Elasticsearch
   end
 
   class Client
-    @[Deprecated("Elasticsearch uses `indices` as the plural for 'index', so please Use the `indices` method instead.")]
-    def indexes
-      indices
-    end
-
     def indices
       Indices::Client.new(self)
     end

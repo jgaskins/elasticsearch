@@ -23,12 +23,13 @@ module Elasticsearch
       end
 
       def get(name : String)
-        response = @client.get("_index_template/#{name}")
-
-        if response.success?
-          GetResponse.from_json response.body
-        else
-          raise Exception.new("#{response.status}: #{response.body}")
+        @client.get("_index_template/#{name}") do |response|
+          if response.success?
+            # GetResponse.from_json response.body_io
+            JSON.parse response.body_io
+          else
+            raise Exception.new("#{response.status}: #{response.body}")
+          end
         end
       end
 
@@ -74,20 +75,6 @@ module Elasticsearch
         include JSON::Serializable
 
         getter mappings : Mapping
-      end
-
-      struct Mapping
-        include JSON::Serializable
-
-        getter dynamic : String
-        getter properties : Hash(String, Property)
-
-        struct Property
-          include JSON::Serializable
-          # include JSON::Serializable::Unmapped
-
-          getter type : Type
-        end
       end
     end
   end

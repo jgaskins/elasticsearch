@@ -41,54 +41,62 @@ module Elasticsearch
     @[JSON::Field(key: "_shards")]
     getter shards : Shards
     getter hits : Hits(T)
-    getter aggregations : Hash(String, AggregatedResult)?
+    getter aggregations : Hash(String, TopLevelAggregatedResult | SingleValue | MultipleValues)?
 
-    struct AggregatedResult
+    struct TopLevelAggregatedResult
+      include JSON::Serializable
+
+      getter doc_count_error_upper_bound : Int64
+      getter sum_other_doc_count : Int64
+      getter buckets : Array(Bucket) { [] of Bucket }
+    end
+
+    alias AggregatedValue = Float64 | Int64 | String
+
+    struct Bucket
+      include JSON::Serializable
+
+      getter key_as_string : String { "" }
+      getter key : JSON::Any
+      getter doc_count : Int64
+
+      @[JSON::Field(ignore: true)]
+      getter aggregations = Hash(String, NestedBucket | SingleValue | MultipleValues).new
+
+      protected def on_unknown_json_attribute(pull, key, key_location)
+        aggregations[key] = begin
+          (NestedBucket | SingleValue | MultipleValues).new(pull)
+        rescue exc : ::JSON::ParseException
+          raise ::JSON::SerializableError.new(exc.message, self.class.to_s, key, *key_location, exc)
+        end
+      end
+
+      protected def on_to_json(json)
+        aggregations.each do |key, value|
+          json.field(key) { value.to_json(json) }
+        end
+      end
+    end
+
+    struct NestedBucket
       include JSON::Serializable
 
       getter buckets : Array(Bucket)
-
-      struct Bucket
-        include JSON::Serializable
-
-        getter key_as_string : String?
-        getter key : JSON::Any
-        getter doc_count : Int64
-
-        @[JSON::Field(ignore: true)]
-        getter aggregations = Hash(String, AggregatedValue).new
-
-        protected def on_unknown_json_attribute(pull, key, key_location)
-          aggregations[key] = begin
-            AggregatedValue.new(pull)
-          rescue exc : ::JSON::ParseException
-            raise ::JSON::SerializableError.new(exc.message, self.class.to_s, key, *key_location, exc)
-          end
-        end
-
-        protected def on_to_json(json)
-          aggregations.each do |key, value|
-            json.field(key) { value.to_json(json) }
-          end
-        end
-      end
-
-      struct AggregatedValue
-        include JSON::Serializable
-
-        getter value : Float64 | Int64 | Nil
-        getter! values : Hash(String, Float64 | Int64 | Nil)
-      end
     end
 
-    struct Shards
+    record SingleValue, value : AggregatedValue do
       include JSON::Serializable
-
-      getter total : Int64
-      getter successful : Int64
-      getter skipped : Int64
-      getter failed : Int64
     end
+    record MultipleValues, values : Hash(String, AggregatedValue?) do
+      include JSON::Serializable
+    end
+
+    # struct AggregatedValue
+    #   include JSON::Serializable
+
+    #   getter value : Float64 | Int64 | Nil
+    #   getter! values : Hash(String, Float64 | Int64 | Nil)
+    # end
 
     struct Hits(T)
       include JSON::Serializable
@@ -119,3 +127,5 @@ module Elasticsearch
     end
   end
 end
+
+require "./es"

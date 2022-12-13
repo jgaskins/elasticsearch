@@ -11,7 +11,9 @@ class Elasticsearch::Client
   def initialize(
     @uri : URI = URI.parse(ENV.fetch("ELASTICSEARCH_URL", "http://localhost:9200/")),
     tls : HTTP::Client::TLSContext = uri.scheme == "https",
-    max_idle_connections = 25
+    max_idle_connections = 25,
+    @retries = 5,
+    @log = Log.for("elasticsearch")
   )
     options = {
       max_idle_pool_size: max_idle_connections,
@@ -154,6 +156,7 @@ class Elasticsearch::Client
       aggregations: aggregations,
       sort: sort,
     )
+
     post("#{index_name}/_search", body: body.to_json) do |response|
       if response.success?
         SearchResult(T).from_json response.body_io
@@ -182,41 +185,117 @@ class Elasticsearch::Client
     end
   end
 
+  def refresh
+    get("_refresh") do |response|
+      if response.success?
+        RefreshResponse.from_json(response.body_io).tap do
+          response.body_io.skip_to_end
+        end
+      else
+        raise Exception.new "#{response.status}: #{JSON.parse response.body_io.gets_to_end}"
+      end
+    end
+  end
+
+  struct RefreshResponse
+    include JSON::Serializable
+
+    @[JSON::Field(key: "_shards")]
+    getter shards : Shards
+  end
+
+  def reindex(source, dest destination)
+    response = post "_reindex", {
+      source: source,
+      dest:   destination,
+    }.to_json
+
+    JSON.parse(response.body)
+  end
+
   def get(path : String, &block : HTTP::Client::Response ->)
-    @pool.checkout(&.get(path) { |resp| yield resp })
+    checkout(&.get(path) { |resp| yield resp })
   end
 
   def put(path : String, body : String? = nil, &block : HTTP::Client::Response ->)
-    @pool.checkout(&.put(path, body: body) { |resp| yield resp })
+    checkout(&.put(path, body: body) { |resp| yield resp })
   end
 
   def get(path : String)
-    @pool.checkout(&.get(path))
+    checkout(&.get(path))
   end
 
   def post(path : String, body : String | IO)
-    @pool.checkout(&.post(path, body: body))
+    checkout(&.post(path, body: body))
   end
 
   def post(path : String, body : String | IO)
-    @pool.checkout(&.post(path, body: body) do |response|
+    checkout &.post(path, body: body) do |response|
       yield response
     ensure
       response.body_io.skip_to_end
-    end)
+    end
   end
 
   def put(path : String, body : String? = nil)
-    @pool.checkout(&.put(path, body: body))
+    checkout(&.put(path, body: body))
   end
 
   def delete(path : String)
-    @pool.checkout(&.delete(path))
+    checkout(&.delete(path))
+  end
+
+  private def checkout(& : HTTP::Client -> T) forall T
+    @pool.checkout do |http|
+      result = uninitialized T
+
+      @retries.times do |retry_count|
+        result = yield http
+      rescue ex : IO::Error
+        @log.error { ex }
+        if retry_count == @retries - 1
+          raise ex
+        end
+      end
+
+      result
+    end
   end
 end
 
-alias ES = Elasticsearch
-
 module Elasticsearch
   alias Sort = Hash(String, String | Hash(String, String))
+
+  struct Shards
+    include JSON::Serializable
+
+    getter total : Int64
+    getter successful : Int64 = 0
+    getter skipped : Int64 = 0
+    getter failed : Int64 = 0
+  end
+
+  struct ReindexSource
+    include JSON::Serializable
+
+    getter index : String
+
+    def initialize(@index)
+    end
+  end
+
+  struct ReindexDestination
+    include JSON::Serializable
+
+    getter index : String
+    getter op_type : OpType?
+
+    def initialize(@index, @op_type = nil)
+    end
+
+    enum OpType
+      INDEX
+      CREATE
+    end
+  end
 end

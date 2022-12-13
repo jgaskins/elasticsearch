@@ -8,7 +8,7 @@ module Elasticsearch
 
       def get_policy(name : String)
         @client.get("_ilm/policy/#{name}") do |resp|
-            pp JSON.parse(resp.body_io)
+            JSON.parse(resp.body_io)
           # Hash(String, GetPolicyResponse).from_json resp.body_io
         end
       end
