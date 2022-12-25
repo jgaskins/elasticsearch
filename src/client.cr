@@ -36,6 +36,7 @@ class Elasticsearch::Client
       end
       http.before_request do |request|
         request.headers.add "content-type", "application/json"
+        request.headers.add "connection", "keep-alive"
       end
       http
     end
