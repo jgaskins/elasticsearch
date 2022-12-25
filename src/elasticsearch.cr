@@ -41,7 +41,7 @@ module Elasticsearch
     @[JSON::Field(key: "_shards")]
     getter shards : Shards
     getter hits : Hits(T)
-    getter aggregations : Hash(String, TopLevelAggregatedResult | SingleValue | MultipleValues)?
+    getter aggregations : Hash(String, TopLevelAggregatedResult)?
 
     struct TopLevelAggregatedResult
       include JSON::Serializable
@@ -61,11 +61,11 @@ module Elasticsearch
       getter doc_count : Int64
 
       @[JSON::Field(ignore: true)]
-      getter aggregations = Hash(String, NestedBucket | SingleValue | MultipleValues).new
+      getter aggregations = Hash(String, NestedBucket | SingleValue | MultipleValues | Boxplot).new
 
       protected def on_unknown_json_attribute(pull, key, key_location)
         aggregations[key] = begin
-          (NestedBucket | SingleValue | MultipleValues).new(pull)
+          (NestedBucket | SingleValue | MultipleValues | Boxplot).new(pull)
         rescue exc : ::JSON::ParseException
           raise ::JSON::SerializableError.new(exc.message, self.class.to_s, key, *key_location, exc)
         end
@@ -89,6 +89,43 @@ module Elasticsearch
     end
     record MultipleValues, values : Hash(String, AggregatedValue?) do
       include JSON::Serializable
+    end
+
+    struct Boxplot
+      include JSON::Serializable
+
+      macro field(var)
+        @[JSON::Field(converter: ES::SearchResult::Boxplot::ValueConverter)]
+        getter {{var}}
+      end
+
+      field min : Float64
+      field max : Float64
+      field q1 : Float64
+      field q2 : Float64
+      field q3 : Float64
+      field lower : Float64
+      field upper : Float64
+
+      module ValueConverter
+        def self.from_json(json : JSON::PullParser) : Float64
+          if value = json.read?(Float64)
+            return value
+          end
+
+          case value = json.read?(String)
+          when "Infinity"
+            Float64::INFINITY
+          when "-Infinity"
+            -Float64::INFINITY
+          when "NaN"
+            Float64::NAN
+          else
+            pp value
+            raise "Oops: #{value}"
+          end
+        end
+      end
     end
 
     # struct AggregatedValue
