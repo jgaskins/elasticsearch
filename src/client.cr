@@ -252,6 +252,7 @@ class Elasticsearch::Client
 
       @retries.times do |retry_count|
         result = yield http
+        break
       rescue ex : IO::Error
         @log.error { ex }
         if retry_count == @retries - 1
