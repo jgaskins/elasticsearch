@@ -32,6 +32,26 @@ describe Elasticsearch do
     es.indices.delete index
   end
 
+  describe ES::Client do
+    it "gets only specific fields" do
+      id = UUID.random
+      es.docs.index index,
+        id: id,
+        doc: {
+          id:   id,
+          name: "Jamie",
+        },
+        refresh: :wait_for
+
+      pp result = es.search index,
+        query_string: "id:#{id}",
+        source: "name",
+        as: NamedTuple(name: String)
+
+      result.hits.hits.map(&.source).should eq [{name: "Jamie"}]
+    end
+  end
+
   describe ES::Indices do
     it "creates indices" do
       # If the index was not created above, this will raise an exception
@@ -47,7 +67,7 @@ describe Elasticsearch do
       es.indices.create index
       es.documents.index index, id, person
 
-      result = es.documents.get(index, id, as: Person)
+      result = es.documents.get(index, id, as: Person).not_nil!
 
       result.index.should eq index
       result.id.should eq id

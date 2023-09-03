@@ -8,17 +8,31 @@ module Elasticsearch
       end
 
       def create(name : String, index_patterns : Array(String), priority : Int64, template, data_stream = nil)
-        response = @client.put "_index_template/#{name}", body: {
+        template = Template.new(
           index_patterns: index_patterns,
-          data_stream:    data_stream,
-          priority:       priority,
-          template:       template,
-        }.to_json
+          data_stream: data_stream,
+          priority: priority,
+          template: template,
+        )
+        response = @client.put "_index_template/#{name}", body: template.to_json
 
         if response.success?
+          # IndexTemplate.from_json response.body
           JSON.parse response.body
         else
           raise Exception.new("#{response.status}: #{response.body}")
+        end
+      end
+
+      struct Template(DS, T)
+        include JSON::Serializable
+
+        getter index_patterns : Array(String)
+        getter data_stream : DS
+        getter priority : Int64
+        getter template : T
+
+        def initialize(*, @index_patterns, @data_stream, @priority, @template)
         end
       end
 

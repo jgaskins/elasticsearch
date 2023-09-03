@@ -1,4 +1,4 @@
-require "http"
+require "http/client"
 require "openssl"
 require "db/pool"
 require "json"
@@ -30,7 +30,7 @@ class Elasticsearch::Client
     end
 
     @pool = DB::Pool(HTTP::Client).new(**options) do
-      http = HTTP::Client.new(@uri.host || "localhost", @uri.port || 9200, tls: tls)
+      http = HTTPClient.new(@uri.host || "localhost", @uri.port || 9200, tls: tls)
       if (user = uri.user) && (password = uri.password)
         http.basic_auth user, password
       end
@@ -46,17 +46,22 @@ class Elasticsearch::Client
     index_name : String | Enumerable(String),
     *,
     match_all,
+    fields = nil,
     from = nil,
     sort = nil,
     size = nil,
     aggregations = nil,
+    profile = nil,
     as type : T.class = JSON::Any
   ) forall T
     search index_name,
       query: {match_all: match_all},
       from: from,
+      fields: fields,
       sort: sort,
+      aggregations: aggregations,
       size: size,
+      profile: profile,
       as: type
   end
 
@@ -66,10 +71,13 @@ class Elasticsearch::Client
     simple_query_string query : String,
     default_operator = nil,
     analyzer = nil,
-    from = nil,
-    sort = nil,
-    size = nil,
+    fields : Array(String)? = nil,
     aggregations = nil,
+    from = nil,
+    profile = nil,
+    size = nil,
+    sort = nil,
+    source = nil,
     as type : T.class = JSON::Any
   ) forall T
     search index_name,
@@ -78,15 +86,22 @@ class Elasticsearch::Client
           query: query,
           default_operator: default_operator,
           analyzer: analyzer,
+          fields: fields,
         ),
       },
       from: from,
+      profile: profile,
       size: size,
       sort: sort,
+      source: source,
       as: type
   end
 
-  record SimpleQueryStringOptions, query : String, default_operator : String? = nil, analyzer : String? = nil do
+  record SimpleQueryStringOptions,
+    query : String,
+    default_operator : String? = nil,
+    analyzer : String? = nil,
+    fields : Array(String)? = nil do
     include JSON::Serializable
   end
 
@@ -95,10 +110,13 @@ class Elasticsearch::Client
     *,
     query_string query : String,
     query_string_options = NamedTuple.new,
-    from = nil,
-    sort = nil,
-    size = nil,
     aggregations = nil,
+    fields = nil,
+    from = nil,
+    profile = nil,
+    size = nil,
+    sort = nil,
+    source = nil,
     as type : T.class = JSON::Any
   ) forall T
     search index_name,
@@ -106,8 +124,12 @@ class Elasticsearch::Client
         query_string: QueryString.new(**query_string_options, query: query),
       },
       from: from,
+      fields: fields,
       size: size,
       sort: sort,
+      source: source,
+      aggregations: aggregations,
+      profile: profile,
       as: type
   end
 
@@ -143,19 +165,27 @@ class Elasticsearch::Client
     *,
     as type : T.class,
     from : Int? = nil,
+    fields : Array(String)? = nil,
     size : Int? = nil,
+    source : String | Bool | Nil = nil,
     aggregations = nil,
-    sort = nil
+    sort = nil,
+    track_scores = nil,
+    profile = nil
   ) forall T
     if index_name.is_a? Enumerable
       index_name = index_name.join(',')
     end
     body = SearchQuery.new(
-      from: from,
-      size: size,
-      query: query,
       aggregations: aggregations,
+      fields: fields,
+      from: from,
+      profile: profile,
+      query: query,
+      size: size,
       sort: sort,
+      track_scores: track_scores,
+      source: source,
     )
 
     post("#{index_name}/_search", body: body.to_json) do |response|
@@ -171,17 +201,26 @@ class Elasticsearch::Client
     include JSON::Serializable
 
     getter from : Int64 | Int32?
+    getter fields : Array(String)?
     getter size : Int64 | Int32?
     getter query : QueryType
     getter aggregations : AggregationType?
+    @[JSON::Field(key: "_source")]
+    getter source : String | Bool | Nil
     getter sort : Sort | Array(Sort) | Nil
+    getter? track_scores : Bool?
+    getter? profile : Bool?
 
     def initialize(
       @query : QueryType,
       @from = nil,
+      @fields = nil,
       @size = nil,
       @aggregations = nil,
-      @sort : Sort | Array(Sort) | Nil = nil
+      @source = nil,
+      @sort = nil,
+      @track_scores = nil,
+      @profile = nil
     )
     end
   end
@@ -205,7 +244,7 @@ class Elasticsearch::Client
     getter shards : Shards
   end
 
-  def reindex(source, dest destination)
+  def reindex(source : String, dest destination : String)
     response = post "_reindex", {
       source: source,
       dest:   destination,
@@ -255,9 +294,7 @@ class Elasticsearch::Client
         break
       rescue ex : IO::Error
         @log.error { ex }
-        if retry_count == @retries - 1
-          raise ex
-        end
+        raise ex if retry_count == @retries - 1
       end
 
       result
@@ -266,7 +303,36 @@ class Elasticsearch::Client
 end
 
 module Elasticsearch
-  alias Sort = Hash(String, String | Hash(String, String))
+  alias Sort = Hash(String, String | Hash(String, String) | SortScript)
+
+  struct SortScript
+    include JSON::Serializable
+
+    getter type : String
+    getter script : Script
+    getter order : SortDirection
+
+    def initialize(*, @type, @script, @order)
+    end
+
+    enum SortDirection
+      ASC
+      DESC
+    end
+  end
+
+  struct Script
+    include JSON::Serializable
+
+    alias Params = Hash(String, JSON::Any::Type)
+
+    getter lang : String
+    getter source : String
+    getter params : Params
+
+    def initialize(*, @source, @params = nil, @lang = "painless")
+    end
+  end
 
   struct Shards
     include JSON::Serializable
@@ -298,6 +364,25 @@ module Elasticsearch
     enum OpType
       INDEX
       CREATE
+    end
+  end
+
+  class HTTPClient < ::HTTP::Client
+    Log = ::Log.for(Elasticsearch)
+
+    protected def around_exec(request, &)
+      start = Time.monotonic
+      begin
+        yield
+      ensure
+        duration = Time.monotonic - start
+        Log.debug &.emit "query",
+          method: request.method,
+          host: host,
+          resource: request.resource,
+          body: request.body.to_s,
+          duration_sec: duration.total_seconds
+      end
     end
   end
 end

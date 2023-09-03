@@ -41,6 +41,7 @@ module Elasticsearch
         @client.get sanitize(name) do |response|
           if response.success?
             GetResponse.from_json response.body_io
+            # JSON.parse response.body_io
           else
             raise Exception.new("#{response.status}: #{JSON.parse response.body_io.gets_to_end}")
           end
@@ -55,6 +56,10 @@ module Elasticsearch
         @client.get("#{sanitize name}/_stats") do |response|
           Stats.from_json response.body_io
         end
+      end
+
+      def refresh(name : String)
+        @client.get("#{sanitize name}/_refresh")
       end
 
       # Sanitize index names to account for things like date math. See:
@@ -141,9 +146,10 @@ module Elasticsearch
             struct Include
               include JSON::Serializable
 
-              @[JSON::Field(key: "_tier_preference")]
+              @[JSON::Field(key: "_tier_preference", converter: ::Elasticsearch::Indices::Settings::Index::Routing::Allocation::Include::TierPreference)]
               getter tier_preference : TierPreference
 
+              @[Flags]
               enum TierPreference
                 # TODO: What are all the values here?
                 DataHot
@@ -151,6 +157,27 @@ module Elasticsearch
                 DataCold
                 DataFreeze
                 DataContent
+
+                def self.from_json(json : JSON::PullParser)
+                  json
+                    .read_string
+                    .split(',')
+                    .map { |item| parse item }
+                    .reduce { |acc, item| acc | item }
+                end
+
+                def self.to_json(value : self, json : JSON::Builder) : Nil
+                  string = String.build do |str|
+                    wrote_first = false
+                    value.each do |item|
+                      if wrote_first
+                        str << ','
+                      end
+                      str << item.to_s.downcase
+                      wrote_first = true
+                    end
+                  end
+                end
               end
             end
           end

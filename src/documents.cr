@@ -84,6 +84,15 @@ module Elasticsearch
       end
     end
 
+    def create(index_name : String, id, doc, *, refresh : Refresh = :false)
+      params = URI::Params{
+        "refresh" => refresh.to_s.downcase,
+      }
+
+      response = @client.post "/#{index_name}/_create/#{id}?#{params}", doc.to_json
+      JSON.parse(response.body)
+    end
+
     def bulk(index_name : String, docs : Enumerable, *, refresh : Documents::Refresh = :false)
       bulk index_name, docs, refresh: refresh do |doc|
         BulkAction.new(
@@ -107,14 +116,91 @@ module Elasticsearch
         "refresh" => refresh.to_s.downcase,
       }
 
-      response = @client.post "/#{index_name}/_bulk?#{params}", body: reader do |response|
+      @client.post "/#{index_name}/_bulk?#{params}", body: reader do |response|
+        # JSON.parse response.body
         reader.close
         if response.success?
+          # JSON.parse response.body_io
           BulkResponse.from_json(response.body_io)
         else
           raise Exception.new("#{response.status}: #{response.body}")
         end
       end
+    end
+
+    def update_by_query(
+      index_name : String,
+      query,
+      *,
+      script : Script,
+      requests_per_second : Int? = nil,
+      conflicts : Conflicts? = nil,
+      refresh : Bool = false,
+    )
+      params = URI::Params{
+        "refresh" => refresh.to_s,
+      }
+      if conflicts
+        params["conflicts"] = conflicts.to_s.downcase
+      end
+      if requests_per_second
+        params["requests_per_second"] = requests_per_second.to_s
+      end
+
+      request = UpdateByQueryRequest.new(
+        query: query,
+        script: script,
+      )
+
+      @client.post "#{index_name}/_update_by_query?#{params}", request.to_json do |response|
+        if response.success?
+          UpdateByQueryResponse.from_json(response.body_io)
+        else
+          raise Exception.new(JSON.parse(response.body_io.gets_to_end).to_s)
+        end
+      end
+    end
+
+    struct UpdateByQueryRequest(T)
+      include JSON::Serializable
+
+      getter query : T
+      getter script : Script
+
+      def initialize(*, @query, @script)
+      end
+    end
+
+    struct UpdateByQueryResponse
+      include JSON::Serializable
+
+      @[JSON::Field(converter: ::Elasticsearch::MillisecondsTimeSpan)]
+      getter took : Time::Span
+      getter? timed_out : Bool
+      getter total : Int64
+      getter updated : Int64
+      getter deleted : Int64
+      getter batches : Int64
+      getter version_conflicts : Int64
+      getter noops : Int64
+      getter retries : Retries
+      @[JSON::Field(key: "throttled_millis", converter: ::Elasticsearch::MillisecondsTimeSpan)]
+      getter throttled : Time::Span
+      getter requests_per_second : Float64
+      @[JSON::Field(key: "throttled_until_millis", converter: ::Elasticsearch::MillisecondsTimeSpan)]
+      getter throttled_until : Time::Span
+      getter failures : Array(JSON::Any)
+
+      struct Retries
+        include JSON::Serializable
+        getter bulk : Int64
+        getter search : Int64
+      end
+    end
+
+    enum Conflicts
+      Proceed
+      Abort
     end
 
     struct BulkResponse
@@ -140,10 +226,10 @@ module Elasticsearch
           @type = Type.new(json)
           json.read_object do |key|
             case key
-            when "_index"        then @index = json.read_string
-            when "_id"           then @id = json.read_string
-            when "_version"      then @version = json.read_int
-            # when "result"        then @result = HTTP::Status.new(json)
+            when "_index"   then @index = json.read_string
+            when "_id"      then @id = json.read_string
+            when "_version" then @version = json.read_int
+              # when "result"        then @result = HTTP::Status.new(json)
             when "_shards"       then @shards = Indices::Stats::Shards.new(json)
             when "status"        then @status = HTTP::Status.new(json.read_int.to_i32)
             when "_seq_no"       then @seq_no = json.read_int
@@ -167,6 +253,7 @@ module Elasticsearch
       id,
       *,
       source : String = "",
+      version : Int? = nil,
       source_includes : String = "",
       source_excludes : String = "",
       as type : T.class
@@ -175,10 +262,13 @@ module Elasticsearch
       params["_source"] = source if source.presence
       params["_source_includes"] = source_includes if source_includes.presence
       params["_source_excludes"] = source_excludes if source_excludes.presence
+      params["version"] = version.to_s if version
 
       response = @client.get "/#{index_name}/_doc/#{id}?#{params}"
       if response.success?
         DocumentResult(T).from_json response.body
+      elsif response.status.not_found?
+        nil
       else
         raise Exception.new("#{response.status}: #{response.body}")
       end
@@ -194,12 +284,12 @@ module Elasticsearch
       @[JSON::Field(key: "_id")]
       getter id : String
       @[JSON::Field(key: "_version")]
-      getter version : Int64
+      getter version : Int64 = 0
       @[JSON::Field(key: "_seq_no")]
-      getter seq_no : Int64
+      getter seq_no : Int64 = 0
       getter? found : Bool
       @[JSON::Field(key: "_primary_term")]
-      getter primary_term : Int64
+      getter primary_term : Int64 = 0
       @[JSON::Field(key: "_source")]
       getter source : T
     end

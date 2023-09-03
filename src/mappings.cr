@@ -71,18 +71,69 @@ module Elasticsearch
     include JSON::Serializable
 
     getter type : Type
+    getter format : Format?
     getter fields : Fields?
     # getter keyword : JSON::Any?
     getter index : Bool?
     getter analyzer : String?
+    getter time_series_dimension : Bool?
+    getter time_series_metric : TimeSeriesMetricType?
+    getter properties : Hash(String, NestedProperty)?
 
     def initialize(
       @type : Type,
       *,
+      @format = nil,
       @fields = nil,
       @index = nil,
       @analyzer = nil,
+      @time_series_dimension = nil,
+      @time_series_metric = nil,
+      @properties = nil
     )
+    end
+
+    @[Flags]
+    enum Format
+      StrictDateOptionalTimeNanos
+      StrictDateOptionalTime
+      EpochMillis
+
+      def self.new(json : JSON::PullParser)
+        value = None
+        string = json.read_string
+        string.split("||").each do |component|
+          value |= parse?(component) || json.raise "Unknown enum #{self} value: #{component.inspect}"
+        end
+        value
+      end
+
+      def to_json(json : JSON::Builder)
+        i = 0
+        string = String.build do |str|
+          each do |member, _value|
+            if i > 0
+              str << "||"
+            end
+
+            member.to_s.underscore str
+            i += 1
+          end
+        end
+
+        json.string string
+      end
+    end
+
+    struct NestedProperty
+      include JSON::Serializable
+
+      # def initialize(@
+    end
+
+    enum TimeSeriesMetricType
+      Counter
+      Gauge
     end
   end
 

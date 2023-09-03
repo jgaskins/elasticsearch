@@ -7,10 +7,9 @@ module Elasticsearch
       end
 
       def get_policy(name : String)
-        @client.get("_ilm/policy/#{name}") do |resp|
-            JSON.parse(resp.body_io)
-          # Hash(String, GetPolicyResponse).from_json resp.body_io
-        end
+        resp = @client.get("_ilm/policy/#{name}") # do |resp|
+        # JSON.parse(resp.body_io)
+        Hash(String, GetPolicyResponse).from_json resp.body
       end
 
       def create_policy(name : String, *, phases : Phases, meta = nil)
@@ -38,19 +37,19 @@ module Elasticsearch
       end
     end
 
-    struct PutPolicyRequest(T)
+    struct PutPolicyRequest
       include JSON::Serializable
 
-      getter policy : Policy(T)
+      getter policy : Policy
 
-      def initialize(@policy : Policy(T))
+      def initialize(@policy : Policy)
       end
     end
 
     struct GetPolicyResponse
       include JSON::Serializable
 
-      getter policy : Policy(Hash(String, JSON::Any))
+      getter policy : Policy
       getter version : Int64
       getter modified_date : Time
       getter in_use_by : PolicyConsumers
@@ -64,14 +63,15 @@ module Elasticsearch
       end
     end
 
-    struct Policy(T)
+    struct Policy
       include JSON::Serializable
+      alias Metadata = Hash(String, JSON::Any)
 
       @[JSON::Field(key: "_meta")]
-      getter meta : T
+      getter meta : Metadata { Metadata.new }
       getter phases : Phases
 
-      def initialize(*, @phases, @meta : T)
+      def initialize(*, @phases, @meta = nil)
       end
     end
 
@@ -91,37 +91,106 @@ module Elasticsearch
       include JSON::Serializable
 
       @[JSON::Field(converter: Time::Span::Shorthand)]
-      getter min_age : Time::Span
-      getter actions : Actions::Action
+      getter min_age : Time::Span?
+      getter actions : Actions
 
-      def initialize(@min_age : Time::Span, @actions : Actions::Action)
+      def initialize(*, @min_age = nil, @actions)
       end
     end
 
-    module Actions
-      struct Delete
-        include JSON::Serializable
+    struct Actions
+      include JSON::Serializable
 
-        getter delete : Options
+      getter rollover : RollOver?
+      getter downsample : Downsample?
+      getter delete : Delete?
+      getter shrink : Shrink?
+      getter forcemerge : ForceMerge?
 
-        def self.new(**options)
-          new(Options.new(**options))
-        end
+      def initialize(
+        *,
+        @rollover = nil,
+        @downsample = nil,
+        @delete = nil,
+        @shrink = nil,
+        @forcemerge = nil
+      )
+      end
 
-        def initialize(@delete)
-        end
-
-        struct Options
+      module Action
+        macro included
           include JSON::Serializable
-
-          getter delete_searchable_snapshot : Bool?
-
-          def initialize(*, @delete_searchable_snapshot = nil)
-          end
         end
       end
 
-      alias Action = Delete
+      struct Downsample
+        include Action
+
+        @[JSON::Field(converter: Time::Span::Shorthand)]
+        getter fixed_interval : Time::Span
+
+        def initialize(*, @fixed_interval)
+        end
+      end
+
+      struct Shrink
+        include Action
+
+        getter number_of_shards : Int64
+
+        def initialize(*, @number_of_shards)
+        end
+      end
+
+      struct ForceMerge
+        include Action
+
+        getter max_num_segments : Int64
+
+        def initialize(*, @max_num_segments)
+        end
+      end
+
+      struct RollOver
+        include Action
+
+        getter min_docs : Int64?
+        getter min_size : Size::WithUnit?
+        @[JSON::Field(converter: Time::Span::Shorthand)]
+        getter min_age : Time::Span?
+        getter min_primary_shard_docs : Int64?
+        getter min_primary_shard_size : Size::WithUnit?
+        getter max_docs : Int64?
+        getter max_size : Size::WithUnit?
+        @[JSON::Field(converter: Time::Span::Shorthand)]
+        getter max_age : Time::Span?
+        getter max_primary_shard_docs : Int64?
+        getter max_primary_shard_size : Size::WithUnit?
+
+        def initialize(
+          *,
+          @min_docs = nil,
+          @min_size = nil,
+          @min_age = nil,
+          @min_primary_shard_docs = nil,
+          @min_primary_shard_size = nil,
+          @max_docs = nil,
+          @max_size = nil,
+          @max_age = nil,
+          @max_primary_shard_docs = nil,
+          @max_primary_shard_size = nil
+        )
+        end
+      end
+
+      struct Delete
+        include Action
+
+        getter delete_searchable_snapshot : Bool?
+
+        def initialize(*, @delete_searchable_snapshot = nil)
+        end
+      end
     end
   end
 

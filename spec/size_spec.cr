@@ -20,3 +20,13 @@ describe ES::Size do
     ES::Size.new(123_456_789).to_json.should eq "123456789"
   end
 end
+
+describe ES::Size::WithUnit do
+  it "deserializes from JSON" do
+    ES::Size::WithUnit.from_json(%{"100gb"}).should eq ES::Size::WithUnit.new(100, :gb)
+  end
+
+  it "serializes into JSON" do
+    ES::Size::WithUnit.new(100, :gb).to_json.should eq %{"100gb"}
+  end
+end
